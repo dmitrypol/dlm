@@ -1,4 +1,5 @@
 ''' config settings '''
+# pylint: disable = line-too-long
 import os
 from logging.config import dictConfig
 
@@ -8,6 +9,14 @@ LOGS_DIR = f'{HOME_DIR}logs/'
 TMP_DIR = f'{HOME_DIR}tmp/'
 APP_ENV = os.environ.get('APP_ENV', 'dev')
 SECRET_KEY = 'foobar'
+
+REDIS_HOST = os.environ.get('REDIS_HOST')
+REDLOCK_CONN = [
+    {'host': REDIS_HOST, 'port': 6379, 'db': 2},
+    {'host': REDIS_HOST, 'port': 6379, 'db': 3},
+    {'host': REDIS_HOST, 'port': 6379, 'db': 4},
+    ]
+RQ_REDIS_URL = f'redis://{REDIS_HOST}:6379/1'
 
 dictConfig({
     'version': 1,
@@ -30,13 +39,3 @@ dictConfig({
         'handlers': ['file']
     }
 })
-
-
-# FLASK_PROFILER = {
-#     "enabled": True,
-#     "storage": {
-#         "engine": "sqlalchemy",
-#         "db_url": SQLALCHEMY_DATABASE_URI
-#     },
-#     "ignore": ["^/static/.*"]
-# }

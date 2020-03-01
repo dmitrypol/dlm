@@ -1,2 +1,6 @@
-# flask_template
-template for my flask projects with commonly used libraries.  Feel free to use as you see fit but no warranties whatsoever.  
+# Distributed Lock Management
+
+docker-compose up --build -d --scale worker=3
+
+* https://redis.io/topics/distlock
+* https://github.com/SPSCommerce/redlock-py

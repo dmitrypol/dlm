@@ -1,6 +1,6 @@
 FROM python:3.6.8
 
-ENV app_name=flask_app
+ENV app_name=dlm
 ENV home_dir=/opt/${app_name}/
 RUN mkdir -p ${home_dir}
 WORKDIR ${home_dir}

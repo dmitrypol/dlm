@@ -2,16 +2,20 @@ version: '3.7'
 
 services:
 
-  python:
+  worker:
     build:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./:/opt/flask_app
-    ports:
-      - target: 5000
-        published: 5000
-    # environment:
-    #   foo: bar
+      - ./:/opt/dlm
     env_file:
       - devops/common.env
+
+  redis:
+    image: redis:5.0.7-alpine
+    ports:
+      - target: 6379
+        published: 6379
+    expose:
+      - 6379
+          
