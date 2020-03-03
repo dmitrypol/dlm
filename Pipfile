@@ -8,6 +8,7 @@ pylint = "*"
 pytest = "*"
 pytest-flask = "*"
 pytest-cov = "*"
+fakeredis = "*"
 
 [packages]
 flask = "*"

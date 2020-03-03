@@ -18,6 +18,14 @@ REDLOCK_CONN = [
     ]
 RQ_REDIS_URL = f'redis://{REDIS_HOST}:6379/1'
 
+JOBS_SCHEDULE = {
+    'gen_report':   '* * * * *',
+    'send_emails':  '* * * * *',
+    'recur_payment':'* * * * *',
+    'import_data':  '* * * * *',
+    'update_cache': '*/5 * * * *',
+}
+
 dictConfig({
     'version': 1,
     'formatters': {'default': {
@@ -39,3 +47,6 @@ dictConfig({
         'handlers': ['file']
     }
 })
+
+if APP_ENV == 'test':
+    pass

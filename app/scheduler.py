@@ -1,10 +1,10 @@
 ''' run apscheduler '''
-# pylint: disable = invalid-name, missing-function-docstring
-#   https://medium.com/better-programming/introduction-to-apscheduler-86337f3bb4a6
+# pylint: disable = missing-function-docstring, eval-used, invalid-name, redefined-outer-name, unused-import, line-too-long
 import logging
 import time
-from apscheduler.jobstores.redis import RedisJobStore
 from apscheduler.schedulers.blocking import BlockingScheduler
+from apscheduler.jobstores.redis import RedisJobStore
+from apscheduler.triggers.cron import CronTrigger
 import redlock
 from . import APP, jobs
 
@@ -13,23 +13,24 @@ jobstores = {
     'default': RedisJobStore(host=APP.config.get('REDIS_HOST'), db=0)
 }
 SCHED = BlockingScheduler(jobstores=jobstores)
+logging.getLogger('apscheduler').setLevel(logging.WARNING)
 
 
-DLM = redlock.Redlock(APP.config.get('REDLOCK_CONN'))
+DLM = redlock.Redlock(APP.config.get('REDLOCK_CONN'), retry_count=3, retry_delay=0.2)
 
 
-# @SCHED.scheduled_job('interval', seconds=60)
-def schedule_jobs():
+def schedule_jobs(job_name):
     try:
-        my_lock = DLM.lock('schedule_jobs', 10000)
+        my_lock = DLM.lock(job_name, 10000)
         if my_lock:
-            jobs.gen_report.queue()
-            jobs.import_data.queue()
-            jobs.send_emails.queue()
-            jobs.update_cache.queue()
-            jobs.recur_payment.queue()
+            job_path = f'jobs.{job_name}.queue()'
+            eval(job_path)
             time.sleep(1)
             DLM.unlock(my_lock)
     except redlock.MultipleRedlockException as exc:
         logging.error(exc)
-SCHED.add_job(schedule_jobs, 'interval', seconds=60)
+
+
+for job_name, crontab_regex in APP.config.get('JOBS_SCHEDULE').items():
+    trigger = CronTrigger.from_crontab(crontab_regex)
+    SCHED.add_job(schedule_jobs, trigger, args=[job_name], id=job_name, replace_existing=True, max_instances=1)
