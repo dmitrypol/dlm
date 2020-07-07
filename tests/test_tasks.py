@@ -6,5 +6,5 @@ RUNNER = APP.test_cli_runner()
 
 
 def test_apscheduler():
-    result = RUNNER.invoke(tasks.apscheduler)
+    result = RUNNER.invoke(tasks.sched_start)
     assert '' in result.output

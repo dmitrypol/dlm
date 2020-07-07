@@ -2,17 +2,17 @@
 # pylint: disable = missing-function-docstring, eval-used, invalid-name, redefined-outer-name, unused-import, line-too-long
 import logging
 import time
-from apscheduler.schedulers.blocking import BlockingScheduler
-from apscheduler.jobstores.redis import RedisJobStore
+#from apscheduler.schedulers.blocking import BlockingScheduler
+from apscheduler.schedulers.background import BackgroundScheduler
+# from apscheduler.jobstores.redis import RedisJobStore
 from apscheduler.triggers.cron import CronTrigger
 import redlock
 from . import APP, jobs
 
 
-jobstores = {
-    'default': RedisJobStore(host=APP.config.get('REDIS_HOST'), db=0)
-}
-SCHED = BlockingScheduler(jobstores=jobstores)
+#jobstores = {'default': RedisJobStore(host=APP.config.get('REDIS_HOST'), db=0)}
+#SCHED = BlockingScheduler(jobstores=jobstores)
+SCHED = BackgroundScheduler(daemon=True)
 logging.getLogger('apscheduler').setLevel(logging.WARNING)
 
 

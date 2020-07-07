@@ -12,5 +12,5 @@ from . import APP, scheduler
 
 
 @APP.cli.command()
-def apscheduler():
+def sched_start():
     scheduler.SCHED.start()

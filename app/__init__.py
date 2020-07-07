@@ -9,4 +9,5 @@ APP = Flask(__name__)
 APP.config.from_pyfile('config.py')
 RQ_CLIENT = RQ(APP)
 
-from . import jobs, tasks
+from . import jobs, tasks, scheduler
+scheduler.SCHED.start()

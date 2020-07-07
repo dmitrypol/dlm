@@ -2,7 +2,8 @@
 # https://docs.docker.com/config/containers/multi-service_container/
 set -m
 
-flask apscheduler &
+flask run &
+#flask apscheduler &
 
 rq worker -c rq_config &
 

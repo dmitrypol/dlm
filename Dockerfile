@@ -13,5 +13,5 @@ COPY ./ ./
 RUN APP_ENV=test pytest tests/* --cov=app
 RUN pylint app/
 
-EXPOSE 5000
+#EXPOSE 5000
 ENTRYPOINT ["devops/entrypoint.sh"]
